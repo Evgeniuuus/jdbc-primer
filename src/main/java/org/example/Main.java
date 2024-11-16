@@ -59,10 +59,10 @@ public class Main {
         System.out.println("------------------------------6е Задание------------------------------");
         bookService.selectYear(2000).orElse(new ArrayList<>()).forEach(System.out::println);
         System.out.println("------------------------------7е Задание------------------------------");
-        bookService.insert(200, "Flowers for Algernon", "Daniel Keyes", 1966, "", "");
-        personService.insert(200, "Eugene", "Zhelinskiy", "987-654-321", false);
-        bookService.findById(200).ifPresent(System.out::println);
-        personService.findById(200).ifPresent(System.out::println);
+        bookService.insert(123, "Code Media", "John Marrs", 1966, "", "");
+        personService.insert(123, "Eugene", "Zhelinskiy", "987-654-321", false);
+        bookService.findById(123).ifPresent(System.out::println);
+        personService.findById(123).ifPresent(System.out::println);
         System.out.println("------------------------------8е Задание------------------------------");
         personService.drop();
         bookService.drop();

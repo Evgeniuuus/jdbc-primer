@@ -39,6 +39,7 @@ public class PersonService {
         }
         preparedStatement.executeBatch();
     }
+
     public void insert(int id, String name, String surname, String phone, Boolean subscribed) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("insert into person (id, name, surname, phone, subscribed) values (?, ?, ?, ?, ?)");
         preparedStatement.setInt(1,id);
@@ -46,7 +47,7 @@ public class PersonService {
         preparedStatement.setString(3, surname);
         preparedStatement.setString(4,phone);
         preparedStatement.setBoolean(5, subscribed);
-        preparedStatement.execute();
+        preparedStatement.executeUpdate();
     }
     public void drop() throws SQLException {
         String sql = "DROP TABLE IF EXISTS person";
@@ -62,7 +63,7 @@ public class PersonService {
 
             if (resultSet.next()) {
                 return Optional.of(new Person(resultSet.getString("name"), resultSet.getString("surname"), resultSet.getString("phone"),
-                        resultSet.getBoolean("subcribed")));
+                        resultSet.getBoolean("subscribed")));
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -70,3 +71,6 @@ public class PersonService {
         }
     }
 }
+
+
+

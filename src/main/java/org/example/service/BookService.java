@@ -7,15 +7,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class BookService {
     private Connection connection;
     public BookService(DataSource dataSource) throws SQLException {
         connection = dataSource.getConnection();
     }
+
     public void createTable() throws SQLException {
         String sql = """
                 CREATE TABLE IF NOT EXISTS books (
@@ -29,6 +28,7 @@ public class BookService {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.execute();
     }
+
     public void insert(List<Book> Books) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("insert into books (id, name, author, publishingYear, ISBN, publisher) values (?, ?, ?, ?, ?, ?)");
         for (int i = 0; i<Books.size(); i++) {
@@ -42,6 +42,7 @@ public class BookService {
         }
         preparedStatement.executeBatch();
     }
+
     public void insert(int id, String name, String author, int publishingYear, String ISBN, String publisher) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("insert into books (id, name, author, publishingYear, ISBN, publisher) values (?, ?, ?, ?, ?, ?)");
         preparedStatement.setInt(1, id);
@@ -50,15 +51,17 @@ public class BookService {
         preparedStatement.setInt(4, publishingYear);
         preparedStatement.setString(5, ISBN);
         preparedStatement.setString(6, publisher);
-        preparedStatement.execute();
+        preparedStatement.executeUpdate();
     }
+
     public void drop() throws SQLException {
         String sql = "DROP TABLE IF EXISTS books";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.execute();
     }
+
     public Optional<List<Book>> selectSorted() throws SQLException {
-        List<Book> books = new ArrayList<>();
+        Set<Book> books = new HashSet<>();
         String sql = "select id, name, author, publishingYear, ISBN, publisher from study.books order by publishingYear";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -67,8 +70,9 @@ public class BookService {
                     resultSet.getInt("publishingYear"), resultSet.getString("isbn"),
                     resultSet.getString("publisher")));
         }
-        return books.isEmpty() ? Optional.empty() : Optional.of(books);
+        return books.isEmpty() ? Optional.empty() : Optional.of(new ArrayList<>(books));
     }
+
     public Optional<List<Book>> selectYear(int year) throws SQLException {
         List<Book> books = new ArrayList<>();
         String sql = "select id, name, author, publishingYear, ISBN, publisher from study.books where publishingYear > ?";
@@ -82,6 +86,7 @@ public class BookService {
         }
         return books.isEmpty() ? Optional.empty() : Optional.of(books);
     }
+
     public Optional<Book> findById(int id) {
         try {
             String sql = "select * from study.book where id = ?";
@@ -98,4 +103,5 @@ public class BookService {
             return Optional.empty();
         }
     }
+
 }
