@@ -74,7 +74,7 @@ public class BookService {
     }
 
     public Optional<List<Book>> selectYear(int year) throws SQLException {
-        List<Book> books = new ArrayList<>();
+        Set<Book> books = new HashSet<>();
         String sql = "select id, name, author, publishingYear, ISBN, publisher from study.books where publishingYear > ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, year);
@@ -84,7 +84,7 @@ public class BookService {
                     resultSet.getInt("publishingYear"), resultSet.getString("isbn"),
                     resultSet.getString("publisher")));
         }
-        return books.isEmpty() ? Optional.empty() : Optional.of(books);
+        return books.isEmpty() ? Optional.empty() : Optional.of(new ArrayList<>(books));
     }
 
     public Optional<Book> findById(int id) {

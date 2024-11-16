@@ -23,4 +23,9 @@ public class Book {
     public int hashCode() {
         return Objects.hash(isbn);
     }
+
+    @Override
+    public String toString() {
+        return name + " by " + author + " (" + publishingYear + ")";
+    }
 }
